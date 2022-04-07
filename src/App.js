@@ -1,23 +1,36 @@
 import logo from './logo.svg';
 import './App.css';
+import { useContext, useEffect } from 'react';
+import Contex from './store/Context';
+import { SetCart, SetCount } from './store/Actions';
+import Header from './components/Header';
+import ProductList from './components/ProductList';
 
 function App() {
+  const {state, depatch} = useContext(Contex)
+  //detructering...
+  const {totalProduct, totalPrice, cart} = state
+ console.log(cart);
+ console.log(totalProduct);
+ console.log(totalPrice);
+  //call one time -> call api
+  useEffect(()=>{
+    
+    fetch('https://course-api.com/react-useReducer-cart-project')
+    .then(res => res.json())
+    .then(data =>{
+      //set cart co trong gio hang tu API
+      depatch(SetCart(data))
+   
+    })
+    
+
+  }, [])
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      {cart.length === 0 ? <h4>No product</h4>:  <ProductList />}
     </div>
   );
 }
